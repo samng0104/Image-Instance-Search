@@ -48,9 +48,14 @@ for i, query_img_no in enumerate(query_imgs_no):
     time_s = time.time()
     dist_record=[]
     per_query_name=path_query+'/'+str(query_img_no)+'.jpg'
+
+
     per_query=cv2.imread(per_query_name)
     # feature extraction for per query
     # the bounding box information is not considered
+    txt_path = path_query_txt + '/' + str(query_img_no) + '.txt'
+    per_query = per_query[:,:,::-1]
+    txt = np.loadtxt(txt_path)
     # quite naive, just an example
     per_query_kp, per_query_des = sift.detectAndCompute(per_query,None)
 
