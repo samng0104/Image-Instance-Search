@@ -7,8 +7,20 @@ import time
 # For Bag of Words implementation
 from sklearn.cluster import KMeans
 
+
+def query_crop(query_img, txt_path, save_path):
+    # query_img = cv2.imread(query_path)
+    query_img = query_img[:,:,::-1] #bgr2rgb
+    txt = np.loadtxt(txt_path)     #load the coordinates of the bounding box
+    crop = query_img[int(txt[1]):int(txt[1] + txt[3]), int(txt[0]):int(txt[0] + txt[2]), :] #crop the instance region
+    cv2.imwrite(save_path, crop[:,:,::-1])  #save the cropped region
+    return crop
+
 # Path of downloaded datasets
 download_path = '/Users/samng/Documents/datasets_4186'
+
+# on Windows:
+download_path = 'C:/Users/Sam NG/Downloads/datasets_4186'
 
 # Path of query images
 path_query = download_path+'/query_4186'
@@ -21,6 +33,10 @@ path_query_txt = download_path+'/query_txt_4186'
 # Path of the gallery
 path_gallery = download_path+'/gallery_4186'
 # '/Users/samng/Documents/datasets_4186/gallery_4186'
+
+# Path of cropped image
+save_path = download_path + '/cropped_4186'
+
 
 # File name of query images
 name_query = glob.glob(path_query+'/*.jpg')
@@ -43,7 +59,6 @@ gallery_imgs_no = [x.split('/')[-1][:-4]
 
 # Default Handcraft method: SIFT
 # the iteration loop for query 
-# iteration times is 2 here, only for the demonstration
 for i, query_img_no in enumerate(query_imgs_no):
     time_s = time.time()
     dist_record=[]
@@ -52,7 +67,8 @@ for i, query_img_no in enumerate(query_imgs_no):
 
     per_query=cv2.imread(per_query_name)
     # feature extraction for per query
-    # the bounding box information is not considered
+    per_query = query_crop(per_query, path_query_txt, save_path)
+    
     txt_path = path_query_txt + '/' + str(query_img_no) + '.txt'
     per_query = per_query[:,:,::-1]
     txt = np.loadtxt(txt_path)
