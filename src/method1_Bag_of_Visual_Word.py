@@ -1,3 +1,6 @@
+"""
+Method 1: Bag of Visual Word
+"""
 import numpy as np
 import cv2
 import pandas as pd
@@ -89,7 +92,6 @@ for i, query_img_no in enumerate(query_imgs_no[0:1]):
     print('retrieval time for query {} is {}s'.format(
         query_img_no, time_e-time_s))
 
-# Method 1: Bag of Visual Word
 
 
 # Output
