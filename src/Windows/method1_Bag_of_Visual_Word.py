@@ -134,10 +134,12 @@ time_e = time.time()
 print('Processing time for gallery images is {}s'.format(time_e-time_s))
 
 query_histogram = np.array(query_histogram)
-query_histogram = np.reshape(query_histogram, (1, -1))
+
+print("Reshaped shape of query_histogram:", query_histogram.shape)
+
 
 # Compute the distance between the query image histogram and the gallery image histograms
-distances = cdist(query_histogram[np.newaxis, :], gallery_histograms, metric='euclidean')
+distances = cdist(query_histogram, gallery_histograms, metric='euclidean')
 
 
 sorted_indices = np.argsort(distances)
