@@ -1,12 +1,7 @@
 import numpy as np
 import cv2
-import pandas as pd
 import glob  # for file type
 import time
-
-# For Bag of Words implementation
-from sklearn.cluster import KMeans
-
 
 def query_crop(query_img, txt, save_path):
     # query_img = cv2.imread(query_path)
@@ -14,20 +9,6 @@ def query_crop(query_img, txt, save_path):
     crop = query_img[int(txt[1]):int(txt[1] + txt[3]), int(txt[0]):int(txt[0] + txt[2]), :]  # crop the instance region
     cv2.imwrite(save_path, crop[:, :, ::-1])  # save the cropped region
     return crop
-
-# Assigns visual words to the descriptors using KMeans clustering.
-def get_visual_words(descriptor_list, kmeans):
-    # Stack all the descriptors vertically
-    descriptors = np.vstack(descriptor_list)
-    # Perform KMeans clustering to get visual words
-    kmeans.fit(descriptors)
-    # Return the visual words (cluster centroids)
-    return kmeans.cluster_centers_
-
-# Extracts SIFT descriptors from an image.
-def get_image_descriptor(image, sift):
-    kp, des = sift.detectAndCompute(image, None)
-    return des
 
 download_path = '/Users/samng/Documents/datasets_4186' # Path of downloaded datasets
 path_query = download_path+'/query_4186' # Path of query images: '/Users/samng/Documents/datasets_4186/query_4186'
@@ -88,10 +69,7 @@ for i, query_img_no in enumerate(query_imgs_no[0:1]):
     time_e = time.time()
     print('retrieval time for query {} is {}s'.format(
         query_img_no, time_e-time_s))
-
-# Method 1: Bag of Visual Word
-
-
+    
 # Output
 f = open(r'./rank_list.txt', 'w')
 for i in range(num_query):
