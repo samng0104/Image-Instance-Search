@@ -16,7 +16,7 @@ num_visual_words = 100
 
 descriptor_size = 128
 
-download_path = 'C:\\temp\datasets_4186' # Path of downloaded datasets
+download_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186' # Path of downloaded datasets
 path_query = download_path+'\\query_4186' # Path of query images: 'C:\temp\datasets_4186\query_4186'
 path_query_txt = download_path+'\\query_txt_4186' # Path of query images' bounding box '\\Users\\samng\\Documents\\datasets_4186\\query_txt_4186'
 path_gallery = download_path+'\\gallery_4186' # Path of the gallery '\\Users\\samng\\Documents\\datasets_4186\\gallery_4186'
@@ -62,7 +62,6 @@ for i, query_img_no in enumerate(query_imgs_no):
     # Detect keypoints and compute descriptors
     per_query_kp, per_query_des = sift.detectAndCompute(per_query, None)
 
-
     keypoints_list.append(per_query_kp)
     descriptors_list.append(per_query_des)
 
@@ -83,9 +82,10 @@ time_e = time.time()
 print('Processing time for gallery images is {}s'.format(time_e-time_s))
 
 
-
+print('Flattening the descriptor list...')
 descriptors_flattened = np.concatenate(descriptors_list)
 
+print('Performing K-mean Clustering')
 # Perform K-means clustering on the flattened descriptors
 num_clusters = 100 # Number of clusters for visual vocabulary
 kmeans = KMeans(n_clusters=num_clusters)
@@ -132,6 +132,9 @@ for i, gallery_img_no in enumerate(gallery_imgs_no):
 
 time_e = time.time()
 print('Processing time for gallery images is {}s'.format(time_e-time_s))
+
+query_histogram = np.array(query_histogram)
+query_histogram = np.reshape(query_histogram, (1, -1))
 
 # Compute the distance between the query image histogram and the gallery image histograms
 distances = cdist(query_histogram[np.newaxis, :], gallery_histograms, metric='euclidean')

@@ -3,6 +3,11 @@ import cv2
 import glob  # for file type
 import time
 
+import torch
+import torchvision.models as models
+
+
+
 def query_crop(query_img, txt, save_path):
     # query_img = cv2.imread(query_path)
     query_img = query_img[:, :, ::-1]  # bgr2rgb
@@ -10,7 +15,7 @@ def query_crop(query_img, txt, save_path):
     cv2.imwrite(save_path, crop[:, :, ::-1])  # save the cropped region
     return crop
 
-download_path = 'C:\\temp\datasets_4186' # Path of downloaded datasets
+download_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186' # Path of downloaded datasets
 path_query = download_path+'\\query_4186' # Path of query images: '\\Users\\samng\\Documents\\datasets_4186\\query_4186'
 path_query_txt = download_path+'\\query_txt_4186' # Path of query images' bounding box '\\Users\\samng\\Documents\\datasets_4186\\query_txt_4186'
 path_gallery = download_path+'\\gallery_4186' # Path of the gallery '\\Users\\samng\\Documents\\datasets_4186\\gallery_4186'
@@ -27,7 +32,12 @@ record_all = np.zeros((num_query, len(name_gallery))) # record for similarity, i
 query_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_query+'\\*.jpg')] # Image number of query images (eg. 2714, 776)
 gallery_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_gallery+'\\*.jpg')] # Image number of gallery images (eg. 448)
 
-    
+"""
+ResNet101 Feature Extraction
+"""
+def ResNet101_extraction()
+
+
 # Output
 f = open(r'./rank_list.txt', 'w')
 for i in range(num_query):

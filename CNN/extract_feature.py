@@ -47,18 +47,18 @@ def feat_extractor_gallery(gallery_dir, feat_savedir):
 
 # Extract the query feature
 def feat_extractor_query():
-    query_path = './data/query/query.jpg'
-    txt_path = './data/query_txt/query.txt'
-    save_path = './data/cropped_query/query.jpg'
-    featsave_path = './data/query_feat/query_feats.npy'
+    query_path = '.\\data\\query\\query.jpg'
+    txt_path = '.\\data\\query_txt\\query.txt'
+    save_path = '.\\data\\cropped_query\\query.jpg'
+    featsave_path = '.\\data\\query_feat\\query_feats.npy'
     crop = query_crop(query_path, txt_path, save_path)
     crop_resize = cv2.resize(crop, (224, 224), interpolation=cv2.INTER_CUBIC)
     vgg_11_extraction(crop_resize, featsave_path)
 
 def main():
     feat_extractor_query()
-    gallery_dir = './data/gallery/'
-    feat_savedir = './data/gallery_feature/'
+    gallery_dir = '.\\data\\gallery\\'
+    feat_savedir = '.\\data\\gallery_feature\\'
     feat_extractor_gallery(gallery_dir, feat_savedir)
 
 if __name__=='__main__':
