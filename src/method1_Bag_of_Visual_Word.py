@@ -16,7 +16,7 @@ num_visual_words = 100
 
 descriptor_size = 128
 
-download_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186' # Path of downloaded datasets
+download_path = 'C:\\Users\\nglun\\OneDrive - City University of Hong Kong - Student\\Documents\\datasets_4186' # Path of downloaded datasets
 path_query = download_path+'\\query_4186' # Path of query images: 'C:\temp\datasets_4186\query_4186'
 path_query_txt = download_path+'\\query_txt_4186' # Path of query images' bounding box '\\Users\\samng\\Documents\\datasets_4186\\query_txt_4186'
 path_gallery = download_path+'\\gallery_4186' # Path of the gallery '\\Users\\samng\\Documents\\datasets_4186\\gallery_4186'
@@ -85,11 +85,17 @@ print('Processing time for gallery images is {}s'.format(time_e-time_s))
 print('Flattening the descriptor list...')
 descriptors_flattened = np.concatenate(descriptors_list)
 
+"""
+K-means Clustering
+"""
+time_s = time.time()
 print('Performing K-mean Clustering')
 # Perform K-means clustering on the flattened descriptors
-num_clusters = 100 # Number of clusters for visual vocabulary
+num_clusters = num_visual_words # Number of clusters for visual vocabulary
 kmeans = KMeans(n_clusters=num_clusters)
 kmeans.fit(descriptors_flattened)
+time_e = time.time()
+print('Processing time for K-mean Clustering is {}s'.format(time_e-time_s))
 
 # Get the visual vocabulary (cluster centers)
 visual_vocabulary = kmeans.cluster_centers_
@@ -142,13 +148,10 @@ print("Reshaped shape of query_histogram:", query_histogram.shape)
 distances = cdist(query_histogram, gallery_histograms, metric='euclidean')
 
 
-sorted_indices = np.argsort(distances)
+sorted_indices = np.argsort(distances, axis=1)
 
-for i, query_img_no in enumerate(query_imgs_no):
-    ascend_index = sorted(range(len(distances)),key=lambda k: distances[k])
-    # update the results for one query
-    record_all[i, :] = ascend_index
-
+for i in range(num_query):
+    record_all[i, :] = sorted_indices[i]
 
 # Output
 f = open(r'./rank_list.txt', 'w')
