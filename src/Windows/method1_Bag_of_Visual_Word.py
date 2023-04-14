@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 from sklearn.neighbors import NearestNeighbors
 from scipy.spatial.distance import cdist
 
-num_visual_words = 1000
+num_visual_words = 100
 
 descriptor_size = 128
 
