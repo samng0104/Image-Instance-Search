@@ -29,7 +29,7 @@ gallery_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_gallery+'\\*.j
 
 # Default Handcraft method: SIFT
 # the iteration loop for query
-for i, query_img_no in enumerate(query_imgs_no[0:1]):
+for i, query_img_no in enumerate(query_imgs_no):
     time_s = time.time()
     dist_record = []
 
