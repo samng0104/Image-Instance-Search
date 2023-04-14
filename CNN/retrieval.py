@@ -31,7 +31,7 @@ def visulization(retrived, query):
     img_rgb_rgb = query_img[:,:,::-1]
     plt.imshow(img_rgb_rgb)
     for i in range(5):
-        img_path = './data/gallery/' + retrived[i][0]
+        img_path = '.\\data\\gallery\\' + retrived[i][0]
         img = cv2.imread(img_path)
         img_rgb = img[:,:,::-1]
         plt.subplot(2, 3, i+2)
@@ -40,11 +40,11 @@ def visulization(retrived, query):
     plt.show()
 
 if __name__ == '__main__':
-    query_path = './data/query_feat/query_feats.npy'
-    gallery_dir = './data/gallery_feature/'
+    query_path = '.\\data\\query_feat\\query_feats.npy'
+    gallery_dir = '.\\data\\gallery_feature\\'
     best_five = retrival_idx(query_path, gallery_dir) # retrieve top 5 matching images in the gallery.
     print(best_five)
     best_five.reverse()
-    query_path = './data/query/query.jpg'
+    query_path = '.\\data\\query\\query.jpg'
     visulization(best_five, query_path) # Visualize the retrieval results
 
