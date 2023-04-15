@@ -36,18 +36,17 @@ def retrieval(query_feat_dir, gallery_feat_dir):
     return results
 
 def main():
-
     query_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat'
     gallery_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\gallery_feat'
     print('Getting results...')
     results = retrieval(query_feat_dir, gallery_feat_dir)
+
     with open('rank_list.txt', 'w') as f:
         for i, gallery_indices in results.items():
-            output = 'Q' + str(i+1) + ': ' + ' '.join(gallery_indices)
+            output = 'Q' + str(i+1) + ': ' + ' '.join(str(idx) for idx in gallery_indices)
             f.write(output + '\n')
 
     print('Results written to rank_list.txt')
-
 
 if __name__=='__main__':
     main()
