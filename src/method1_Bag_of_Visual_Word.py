@@ -34,7 +34,9 @@ record_all = np.zeros((num_query, len(name_gallery))) # record for similarity, i
 query_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_query+'\\*.jpg')] # Image number of query images (eg. 2714, 776)
 gallery_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_gallery+'\\*.jpg')] # Image number of gallery images (eg. 448)
 
-
+"""
+Reference from sample code
+"""
 def query_crop(query_img, txt, save_path):
     # query_img = cv2.imread(query_path)
     query_img = query_img[:, :, ::-1]  # bgr2rgb
@@ -90,7 +92,6 @@ K-means Clustering
 """
 time_s = time.time()
 print('Performing K-mean Clustering')
-# Perform K-means clustering on the flattened descriptors
 num_clusters = num_visual_words # Number of clusters for visual vocabulary
 kmeans = KMeans(n_clusters=num_clusters)
 kmeans.fit(descriptors_flattened)
@@ -141,10 +142,6 @@ print('Processing time for gallery images is {}s'.format(time_e-time_s))
 
 query_histogram = np.array(query_histogram)
 
-# print("Reshaped shape of query_histogram:", query_histogram.shape)
-
-
-# Compute the distance between the query image histogram and the gallery image histograms
 distances = cdist(query_histogram, gallery_histograms, metric='euclidean')
 
 
