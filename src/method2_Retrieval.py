@@ -1,7 +1,7 @@
 import numpy as np
-
 import os
 import time
+
 from sklearn.metrics.pairwise import cosine_similarity
 
 def similarity(query_feat, gallery_feat):
@@ -11,7 +11,6 @@ def similarity(query_feat, gallery_feat):
     sim = cosine_similarity(query_feat, gallery_feat)
     sim = np.squeeze(sim)
     return sim
-
 
 def retrieval(query_feat_dir, gallery_feat_dir):
     results = {}
@@ -38,12 +37,12 @@ def retrieval(query_feat_dir, gallery_feat_dir):
 def main():
     query_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat'
     gallery_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\gallery_feat'
-    print('Getting results...')
     results = retrieval(query_feat_dir, gallery_feat_dir)
 
-    with open('rank_list.txt', 'w') as f:
-        for i, gallery_indices in results.items():
-            output = 'Q' + str(i+1) + ': ' + ' '.join(str(idx) for idx in gallery_indices)
+    with open('./rank_list.txt', 'w') as f:
+        for query_name, gallery_indices in results.items():
+            output = query_name + ': ' + ' '.join(gallery_indices)
+            print(output)
             f.write(output + '\n')
 
     print('Results written to rank_list.txt')

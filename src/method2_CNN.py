@@ -28,9 +28,6 @@ num_gallery = len(name_gallery) # Total number of gallery images
 path_query_txt = download_path+'\\query_txt_4186' # Path of query images' bounding box '\\Users\\samng\\Documents\\datasets_4186\\query_txt_4186'
 save_path = download_path + '\\cropped_4186' # Path of cropped image
 
-
-# ORB detector as SIFT detector
-sift = cv2.ORB_create()
 record_all = np.zeros((num_query, len(name_gallery))) # record for similarity, initialize to 0 array
 gallery_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_gallery+'\\*.jpg')] # Image number of gallery images (eg. 448)
 query_imgs_no = [x.split('\\')[-1][:-4] for x in glob.glob(path_query+'\\*.jpg')] # Image number of query images (eg. 2714, 776)
@@ -103,7 +100,9 @@ def feat_extractor_query():
         
         featsave_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat\\' + query_img_no + '.npy'
         resnet_101_extraction(crop, featsave_path)
-
+"""
+Retrieval
+"""
 def similarity(query_feat, gallery_feat):
     query_feat = np.reshape(query_feat, (query_feat.shape[0], -1))
     gallery_feat = np.reshape(gallery_feat, (gallery_feat.shape[0], -1))
@@ -148,12 +147,12 @@ def main():
     # Retrieval
     query_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat'
     gallery_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\gallery_feat'
-    print('Getting results...')
     results = retrieval(query_feat_dir, gallery_feat_dir)
 
-    with open('rank_list.txt', 'w') as f:
-        for i, gallery_indices in results.items():
-            output = 'Q' + str(i+1) + ': ' + ' '.join(str(idx) for idx in gallery_indices)
+    with open('./rank_list.txt', 'w') as f:
+        for query_name, gallery_indices in results.items():
+            output = query_name + ': ' + ' '.join(gallery_indices)
+            print(output)
             f.write(output + '\n')
 
     print('Results written to rank_list.txt')
