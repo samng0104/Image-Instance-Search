@@ -16,7 +16,7 @@ num_visual_words = 100
 
 descriptor_size = 128
 
-download_path = 'C:\\Users\\nglun\\OneDrive - City University of Hong Kong - Student\\Documents\\datasets_4186' # Path of downloaded datasets
+download_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186' # Path of downloaded datasets
 path_query = download_path+'\\query_4186' # Path of query images: 'C:\temp\datasets_4186\query_4186'
 path_query_txt = download_path+'\\query_txt_4186' # Path of query images' bounding box '\\Users\\samng\\Documents\\datasets_4186\\query_txt_4186'
 path_gallery = download_path+'\\gallery_4186' # Path of the gallery '\\Users\\samng\\Documents\\datasets_4186\\gallery_4186'
@@ -141,7 +141,7 @@ print('Processing time for gallery images is {}s'.format(time_e-time_s))
 
 query_histogram = np.array(query_histogram)
 
-print("Reshaped shape of query_histogram:", query_histogram.shape)
+# print("Reshaped shape of query_histogram:", query_histogram.shape)
 
 
 # Compute the distance between the query image histogram and the gallery image histograms
@@ -152,6 +152,10 @@ sorted_indices = np.argsort(distances, axis=1)
 
 for i in range(num_query):
     record_all[i, :] = sorted_indices[i]
+
+
+for i in range (20):
+    print(f'Q {i+1} is {query_imgs_no[i]}')
 
 # Output
 f = open(r'./rank_list.txt', 'w')
