@@ -46,26 +46,19 @@ def query_crop(query_img, txt_path, save_path):
     cv2.imwrite(save_path, crop[:,:,::-1])  #save the cropped region
     return crop
 
-
-def similarity(query_feat, gallery_feat):
-    sim = cosine_similarity(query_feat, gallery_feat)
-    sim = np.squeeze(sim)
-    return sim
-
-
 """
-ResNet101 Feature Extraction
+ResNet101 Feature Extraction, referenced from the sample code
 """
 def resnet_101_extraction(img, featsave_path):
     resnet_transform = transforms.Compose([
-        transforms.ToPILImage(),  # Convert input image from NumPy array to PIL image
-        transforms.Resize(256),  # Resize input image to 256x256
+        transforms.ToPILImage(),
+        transforms.Resize(256),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406],
                              std=[0.229, 0.224, 0.225])])
     
     img_transform = resnet_transform(img)  # normalize the input image and transform it to tensor.
-    img_transform = torch.unsqueeze(img_transform, 0)  # Set batch size as 1. You can enlarge the batch size to accelerate.
+    img_transform = torch.unsqueeze(img_transform, 0)
 
     # Initialize the weights pretrained on the ImageNet dataset
     resnet101 = models.resnet101(pretrained=True)
@@ -74,9 +67,6 @@ def resnet_101_extraction(img, featsave_path):
     feats = resnet101_feat_extractor(img_transform)  # Extract feature
     feats_np = feats.cpu().detach().numpy()  # Convert tensor to numpy
     np.save(featsave_path, feats_np)  # Save the feature
-
-
-
 
 def feat_extractor_gallery(gallery_dir, feat_savedir):
 
@@ -114,7 +104,38 @@ def feat_extractor_query():
         featsave_path = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat\\' + query_img_no + '.npy'
         resnet_101_extraction(crop, featsave_path)
 
+def similarity(query_feat, gallery_feat):
+    query_feat = np.reshape(query_feat, (query_feat.shape[0], -1))
+    gallery_feat = np.reshape(gallery_feat, (gallery_feat.shape[0], -1))
+    
+    sim = cosine_similarity(query_feat, gallery_feat)
+    sim = np.squeeze(sim)
+    return sim
+
+def retrieval(query_feat_dir, gallery_feat_dir):
+    results = {}
+
+    for query_file in os.listdir(query_feat_dir):
+        print('Retrieving for query ' + query_file)
+        time_s = time.time()
+        query_feat = np.load(os.path.join(query_feat_dir, query_file))
+        query_name = query_file.split('.')[0]
+        gallery_similarities = []
+        for gallery_file in os.listdir(gallery_feat_dir):
+            gallery_feat = np.load(os.path.join(gallery_feat_dir, gallery_file))
+            gallery_name = gallery_file.split('.')[0]
+            sim = similarity(query_feat, gallery_feat)
+            gallery_similarities.append((gallery_name, sim))
+        gallery_similarities.sort(key=lambda x: x[1], reverse=True)
+        gallery_indices = [x[0] for x in gallery_similarities]
+        results[query_name] = gallery_indices
+        time_e = time.time()
+        print('Processing time for query image ' + query_file +' is {}s'.format(time_e-time_s))
+
+    return results
+
 def main():
+    # Extraction
     print('Retrieving query features...')
     feat_extractor_query()
 
@@ -124,14 +145,18 @@ def main():
     print('Retrieving gallery features...')
     feat_extractor_gallery(gallery_dir, feat_savedir)
 
+    # Retrieval
+    query_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\query_feat'
+    gallery_feat_dir = 'C:\\Users\\lungpng2\\Documents\\datasets_4186\\gallery_feat'
+    print('Getting results...')
+    results = retrieval(query_feat_dir, gallery_feat_dir)
+    with open('rank_list.txt', 'w') as f:
+        for i, gallery_indices in results.items():
+            output = 'Q' + str(i+1) + ': ' + ' '.join(gallery_indices)
+            f.write(output + '\n')
+
+    print('Results written to rank_list.txt')
+
+
 if __name__=='__main__':
     main()
-
-# Output
-# f = open(r'./rank_list.txt', 'w')
-# for i in range(num_query):
-#     f.write('Q'+str(i+1)+': ')
-#     for j in range(len(name_gallery)):
-#         f.write(str(np.int32(record_all[i, j]))+' ')
-#     f.write('\n')
-# f.close()
